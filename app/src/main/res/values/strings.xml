@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pototo</string>
+    <string name="potatoes_name">Pototo</string>
+    <string name="default_time_remain">25:00</string>
 </resources>
