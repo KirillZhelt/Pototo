@@ -11,11 +11,12 @@ class PototoTimer(millisInFuture: Long, val onPototoTimerFinish: () -> Unit, val
     var millisInFuture: Long = millisInFuture
         set (value) {
             field = value
-            countDownTimer = makeCountDownTimerObject()
+            countDownTimer = makeCountDownTimerObject() // make new CountDownTimer because time to count down changed
         }
 
     private var countDownTimer: CountDownTimer = makeCountDownTimerObject()
 
+    // makes new CountDownTimer according to current parameters
     private fun makeCountDownTimerObject() = object: CountDownTimer(millisInFuture, COUNT_DOWN_INTERVAL) {
         override fun onFinish() {
             onPototoTimerFinish()

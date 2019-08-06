@@ -2,7 +2,7 @@ package dev.kirillzhelt.pototo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -14,21 +14,14 @@ class MainActivity : AppCompatActivity() {
 
         val timerTextView: TextView = findViewById(R.id.timer_textview)
 
-        val timer = object: CountDownTimer(5 * 60 * 1000, 1000) {
-            override fun onTick(p0: Long) {
-                timerTextView.text = "${p0 / 60000}:${(p0 % 60000) / 1000}"
-            }
-
-            override fun onFinish() {
-                timerTextView.text = "now you are free (really not)"
-            }
-        }
-
-        timer.start()
-
-        timer.cancel()
+        val timer: PototoTimer = PototoTimer(1 * 60 * 1000,
+            { timerTextView.text = "now you are free (really not)" },
+            { p0 -> timerTextView.text = "${p0 / 60000}:${(p0 % 60000) / 1000}" })
 
         val potatoesImageView: ImageView = findViewById(R.id.potatoes_imageview)
         potatoesImageView.setOnClickListener { timer.start() }
+
+        val cancelButton: Button = findViewById(R.id.cancel_button)
+        cancelButton.setOnClickListener { timer.cancel() }
     }
 }
