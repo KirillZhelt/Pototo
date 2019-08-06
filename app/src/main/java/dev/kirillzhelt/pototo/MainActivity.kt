@@ -3,6 +3,7 @@ package dev.kirillzhelt.pototo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.widget.ImageView
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
@@ -24,5 +25,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         timer.start()
+
+        timer.cancel()
+
+        val potatoesImageView: ImageView = findViewById(R.id.potatoes_imageview)
+        potatoesImageView.setOnClickListener { timer.start() }
     }
 }
