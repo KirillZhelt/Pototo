@@ -39,6 +39,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerTick(p0: Long) {
+        // TODO: fix hard-coded string
         timerTextView.text = "${p0 / 60000}:${(p0 % 60000) / 1000}"
     }
 
@@ -48,6 +49,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerCancel(v: View) {
+        // TODO: update time
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
     }
