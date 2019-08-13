@@ -43,7 +43,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerTick(p0: Long) {
-        timerTextView.text = getString(R.string.time_placeholder, p0 / 60000, (p0 % 60000) / 1000)
+        timerTextView.text = getTimerTextViewText(p0)
     }
 
     private fun timerFinish() {
@@ -52,8 +52,12 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerCancel(v: View) {
-        // TODO: update time
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
+
+        timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
+
+    private fun getTimerTextViewText(millis: Long) = getString(R.string.time_placeholder, millis / 60000,
+        (millis % 60000) / 1000)
 }
