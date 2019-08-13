@@ -43,7 +43,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerFinish() {
-        timerTextView.text = "now you are free (really not)"
+        timerTextView.text = getString(R.string.timer_finish_text)
         cancelButton.visibility = View.INVISIBLE
     }
 
