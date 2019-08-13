@@ -19,12 +19,16 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        timerTextView = findViewById(R.id.timer_textview)
+        val timerDefaultTime = getString(R.string.default_time_remain).split(":").map { s -> s.toLong() }
+        val minutes = timerDefaultTime[0]
+        val seconds = timerDefaultTime[1]
 
-        // TODO: get default remain time from resources and use it here
-        timer = PototoTimer(1 * 60 * 1000,
+        timer = PototoTimer((minutes * 60 + seconds) * 1000,
             ::timerFinish,
             ::timerTick)
+
+        timerTextView = findViewById(R.id.timer_textview)
+        timerTextView.text = getString(R.string.time_placeholder, minutes, seconds)
 
         potatoesImageView = findViewById(R.id.potatoes_imageview)
         potatoesImageView.setOnClickListener(::timerStart)
@@ -39,18 +43,21 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerTick(p0: Long) {
-        // TODO: fix hard-coded string
-        timerTextView.text = "${p0 / 60000}:${(p0 % 60000) / 1000}"
+        timerTextView.text = getTimerTextViewText(p0)
     }
 
     private fun timerFinish() {
-        timerTextView.text = "now you are free (really not)"
+        timerTextView.text = getString(R.string.timer_finish_text)
         cancelButton.visibility = View.INVISIBLE
     }
 
     private fun timerCancel(v: View) {
-        // TODO: update time
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
+
+        timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
+
+    private fun getTimerTextViewText(millis: Long) = getString(R.string.time_placeholder, millis / 60000,
+        (millis % 60000) / 1000)
 }
