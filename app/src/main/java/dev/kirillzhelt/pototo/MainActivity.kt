@@ -19,12 +19,16 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        timerTextView = findViewById(R.id.timer_textview)
+        val timerDefaultTime = getString(R.string.default_time_remain).split(":").map { s -> s.toLong() }
+        val minutes = timerDefaultTime[0]
+        val seconds = timerDefaultTime[1]
 
-        // TODO: get default remain time from resources and use it here
-        timer = PototoTimer(1 * 60 * 1000,
+        timer = PototoTimer((minutes * 60 + seconds) * 1000,
             ::timerFinish,
             ::timerTick)
+
+        timerTextView = findViewById(R.id.timer_textview)
+        timerTextView.text = getString(R.string.time_placeholder, minutes, seconds)
 
         potatoesImageView = findViewById(R.id.potatoes_imageview)
         potatoesImageView.setOnClickListener(::timerStart)
