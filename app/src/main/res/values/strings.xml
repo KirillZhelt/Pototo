@@ -2,4 +2,5 @@
     <string name="app_name">Pototo</string>
     <string name="potatoes_name">Pototo</string>
     <string name="default_time_remain">25:00</string>
+    <string name="time_placeholder">%1$i:%2$i</string>
 </resources>

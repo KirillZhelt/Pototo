@@ -39,8 +39,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun timerTick(p0: Long) {
-        // TODO: fix hard-coded string
-        timerTextView.text = "${p0 / 60000}:${(p0 % 60000) / 1000}"
+        timerTextView.text = getString(R.string.time_placeholder, p0 / 60000, (p0 % 60000) / 1000)
     }
 
     private fun timerFinish() {
