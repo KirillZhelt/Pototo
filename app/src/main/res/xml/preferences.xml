@@ -3,5 +3,5 @@
 
     <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:title="Switch preference" android:key="switch_preference_1"/>
+            android:title="Switch preference" android:key="example_switch"/>
 </PreferenceScreen>
