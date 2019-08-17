@@ -2,13 +2,13 @@ package dev.kirillzhelt.pototo
 
 import android.os.CountDownTimer
 
-class PototoTimer(millisInFuture: Long, val onPototoTimerFinish: () -> Unit, val onPototoTimerTick: (p0: Long) -> Unit) {
+class PototoTimer(millisInFuture: Int, val onPototoTimerFinish: () -> Unit, val onPototoTimerTick: (p0: Long) -> Unit) {
 
     companion object {
         const val COUNT_DOWN_INTERVAL: Long = 1000
     }
 
-    var millisInFuture: Long = millisInFuture
+    var millisInFuture: Int = millisInFuture
         set (value) {
             field = value
             countDownTimer = makeCountDownTimerObject() // make new CountDownTimer because time to count down changed
@@ -17,7 +17,7 @@ class PototoTimer(millisInFuture: Long, val onPototoTimerFinish: () -> Unit, val
     private var countDownTimer: CountDownTimer = makeCountDownTimerObject()
 
     // makes new CountDownTimer according to current parameters
-    private fun makeCountDownTimerObject() = object: CountDownTimer(millisInFuture, COUNT_DOWN_INTERVAL) {
+    private fun makeCountDownTimerObject() = object: CountDownTimer(millisInFuture.toLong(), COUNT_DOWN_INTERVAL) {
         override fun onFinish() {
             onPototoTimerFinish()
         }

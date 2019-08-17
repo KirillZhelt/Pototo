@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:title="Switch preference" android:key="example_switch"/>
+
+    <dev.kirillzhelt.pototo.MinutesPickerPreference android:key="timer_minutes" android:title="Timer minutes"
+                                                    android:summary="Choose amount of time to pototo (in minutes)"
+                                                    android:defaultValue="25" />
+</PreferenceScreen>
