@@ -22,6 +22,7 @@ import dev.kirillzhelt.pototo.databinding.FragmentTimerBinding
  *
  */
 class TimerFragment : Fragment() {
+    // TODO: handle timer when fragment state is changing, it crashes when timer is on and settings are open after navigate up
 
     private lateinit var timerTextView: TextView
     private lateinit var potatoesImageView: ImageView
