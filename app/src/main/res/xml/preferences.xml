@@ -4,4 +4,5 @@
     <SwitchPreferenceCompat
             android:defaultValue="true"
             android:title="Switch preference" android:key="example_switch"/>
+    <dev.kirillzhelt.potato.TimePickerPreference></dev.kirillzhelt.potato.TimePickerPreference>
 </PreferenceScreen>
