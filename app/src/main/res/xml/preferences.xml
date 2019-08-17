@@ -4,5 +4,8 @@
     <SwitchPreferenceCompat
             android:defaultValue="true"
             android:title="Switch preference" android:key="example_switch"/>
-    <dev.kirillzhelt.potato.TimePickerPreference></dev.kirillzhelt.potato.TimePickerPreference>
+
+    <dev.kirillzhelt.pototo.MinutesPickerPreference android:key="timer_minutes" android:title="Timer minutes"
+                                                    android:summary="Choose amount of time to pototo (in minutes)"
+                                                    android:defaultValue="25" />
 </PreferenceScreen>
