@@ -37,27 +37,20 @@ class TimerFragment : Fragment() {
         setHasOptionsMenu(true)
 
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val timerDefaultTime = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
 
-        try {
-            val timerDefaultTime = sharedPreferences.getInt("timer_minutes", 25)
+        timer = PototoTimer(timerDefaultTime * 60 * 1000,
+            ::timerFinish,
+            ::timerTick)
 
-            timer = PototoTimer(timerDefaultTime * 60 * 1000,
-                ::timerFinish,
-                ::timerTick)
+        timerTextView = binding.timerTextview
+        timerTextView.text = getString(R.string.time_placeholder, timerDefaultTime, 0)
 
-            timerTextView = binding.timerTextview
-            timerTextView.text = getString(R.string.time_placeholder, timerDefaultTime, 0)
+        potatoesImageView = binding.potatoesImageview
+        potatoesImageView.setOnClickListener(::timerStart)
 
-            potatoesImageView = binding.potatoesImageview
-            potatoesImageView.setOnClickListener(::timerStart)
-
-            cancelButton = binding.cancelButton
-            cancelButton.setOnClickListener(::timerCancel)
-        } catch (e: Exception) {
-            Log.i("hhh", "$e")
-        }
-
-
+        cancelButton = binding.cancelButton
+        cancelButton.setOnClickListener(::timerCancel)
 
         return binding.root
     }
@@ -101,4 +94,9 @@ class TimerFragment : Fragment() {
     private fun getTimerTextViewText(millis: Int) = getString(R.string.time_placeholder, millis / 60000,
         (millis % 60000) / 1000)
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Log.i("TimerFragment", "onDestroy called")
+    }
 }

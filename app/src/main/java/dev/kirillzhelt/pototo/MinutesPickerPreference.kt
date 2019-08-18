@@ -7,7 +7,7 @@ import androidx.preference.DialogPreference
 
 class MinutesPickerPreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
 
-    var msTime: Int = 25 * 60 * 1000
+    var msTime: Int = 0
         set(value) {
             field = value
 
