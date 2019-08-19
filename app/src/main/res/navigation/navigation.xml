@@ -10,4 +10,6 @@
               android:label="fragment_about" tools:layout="@layout/fragment_about"/>
     <fragment android:id="@+id/settingsFragment" android:name="dev.kirillzhelt.pototo.SettingsFragment"
               android:label="fragment_settings" tools:layout="@layout/fragment_settings"/>
+    <activity android:id="@+id/settingsActivity" android:name="dev.kirillzhelt.pototo.SettingsActivity"
+              android:label="SettingsActivity"/>
 </navigation>

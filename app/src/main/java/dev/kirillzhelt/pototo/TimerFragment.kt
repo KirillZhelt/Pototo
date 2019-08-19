@@ -30,6 +30,9 @@ class TimerFragment : Fragment() {
 
     private lateinit var timer: PototoTimer
 
+    private lateinit var timerFinishText: String
+    private lateinit var timeFormat: String
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding: FragmentTimerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
@@ -39,12 +42,15 @@ class TimerFragment : Fragment() {
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val timerDefaultTime = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
 
+        timerFinishText = getString(R.string.timer_finish_text)
+        timeFormat = getString(R.string.time_format)
+
         timer = PototoTimer(timerDefaultTime * 60 * 1000,
             ::timerFinish,
             ::timerTick)
 
         timerTextView = binding.timerTextview
-        timerTextView.text = getString(R.string.time_placeholder, timerDefaultTime, 0)
+        timerTextView.text = timeFormat.format(timerDefaultTime, 0)
 
         potatoesImageView = binding.potatoesImageview
         potatoesImageView.setOnClickListener(::timerStart)
@@ -76,11 +82,12 @@ class TimerFragment : Fragment() {
     }
 
     private fun timerTick(p0: Long) {
+        // TODO: try log
         timerTextView.text = getTimerTextViewText(p0.toInt())
     }
 
     private fun timerFinish() {
-        timerTextView.text = getString(R.string.timer_finish_text)
+        timerTextView.text = timerFinishText
         cancelButton.visibility = View.INVISIBLE
     }
 
@@ -91,10 +98,12 @@ class TimerFragment : Fragment() {
         timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
 
-    private fun getTimerTextViewText(millis: Int) = getString(R.string.time_placeholder, millis / 60000,
+    private fun getTimerTextViewText(millis: Int) = timeFormat.format(millis / 60000,
         (millis % 60000) / 1000)
 
     override fun onDestroy() {
+        // TODO: remove
+
         super.onDestroy()
 
         Log.i("TimerFragment", "onDestroy called")
