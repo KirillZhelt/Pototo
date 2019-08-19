@@ -3,7 +3,6 @@ package dev.kirillzhelt.pototo
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
@@ -14,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import dev.kirillzhelt.pototo.databinding.FragmentTimerBinding
+import kotlin.properties.Delegates
 
 
 /**
@@ -22,16 +22,20 @@ import dev.kirillzhelt.pototo.databinding.FragmentTimerBinding
  *
  */
 class TimerFragment : Fragment() {
-    // TODO: handle timer when fragment state is changing, it crashes when timer is on and settings are open after navigate up
+    // TODO: pick defaultTimerTime from settings for new timer
 
     private lateinit var timerTextView: TextView
     private lateinit var potatoesImageView: ImageView
     private lateinit var cancelButton: Button
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     private lateinit var timer: PototoTimer
 
     private lateinit var timerFinishText: String
     private lateinit var timeFormat: String
+
+    private var timerDefaultTime by Delegates.notNull<Int>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,8 +43,8 @@ class TimerFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        val timerDefaultTime = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        timerDefaultTime = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
 
         timerFinishText = getString(R.string.timer_finish_text)
         timeFormat = getString(R.string.time_format)
@@ -82,16 +86,14 @@ class TimerFragment : Fragment() {
     }
 
     private fun timerTick(p0: Long) {
-        // TODO: try log
-        if (isAdded && isVisible && userVisibleHint) {
-            Log.i("TimerFragment", "timerTick called")
+        if (isAdded && isVisible && userVisibleHint)
             timerTextView.text = getTimerTextViewText(p0.toInt())
-        }
     }
 
     override fun onStart() {
         super.onStart()
 
+        timer.millisInFuture = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
         userVisibleHint = true
     }
 
