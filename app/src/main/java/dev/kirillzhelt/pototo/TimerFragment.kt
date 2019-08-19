@@ -83,7 +83,22 @@ class TimerFragment : Fragment() {
 
     private fun timerTick(p0: Long) {
         // TODO: try log
-        timerTextView.text = getTimerTextViewText(p0.toInt())
+        if (isAdded && isVisible && userVisibleHint) {
+            Log.i("TimerFragment", "timerTick called")
+            timerTextView.text = getTimerTextViewText(p0.toInt())
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        userVisibleHint = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        userVisibleHint = false
     }
 
     private fun timerFinish() {
@@ -100,12 +115,4 @@ class TimerFragment : Fragment() {
 
     private fun getTimerTextViewText(millis: Int) = timeFormat.format(millis / 60000,
         (millis % 60000) / 1000)
-
-    override fun onDestroy() {
-        // TODO: remove
-
-        super.onDestroy()
-
-        Log.i("TimerFragment", "onDestroy called")
-    }
 }
