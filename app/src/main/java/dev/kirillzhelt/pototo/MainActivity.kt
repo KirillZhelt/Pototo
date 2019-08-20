@@ -2,6 +2,7 @@ package dev.kirillzhelt.pototo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -33,4 +34,13 @@ class MainActivity: AppCompatActivity() {
 
     override fun onSupportNavigateUp() = navController.navigateUp()
 
+    override fun onStop() {
+        super.onStop()
+        Log.i("MainActivity", "onStop called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("MainActivity", "onDestroy called")
+    }
 }

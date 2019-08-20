@@ -18,7 +18,7 @@
                 android:contentDescription="@string/potatoes_name"
                 app:layout_constraintVertical_chainStyle="packed" app:layout_constraintVertical_bias="0.3"/>
         <TextView
-                android:text="@string/time_placeholder"
+                android:text="@string/time_format"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/timer_textview"

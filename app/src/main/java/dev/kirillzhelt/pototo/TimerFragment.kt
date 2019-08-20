@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import dev.kirillzhelt.pototo.databinding.FragmentTimerBinding
+import kotlin.properties.Delegates
 
 
 /**
@@ -22,13 +23,17 @@ import dev.kirillzhelt.pototo.databinding.FragmentTimerBinding
  *
  */
 class TimerFragment : Fragment() {
-    // TODO: handle timer when fragment state is changing, it crashes when timer is on and settings are open after navigate up
 
     private lateinit var timerTextView: TextView
     private lateinit var potatoesImageView: ImageView
     private lateinit var cancelButton: Button
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     private lateinit var timer: PototoTimer
+
+    private lateinit var timerFinishText: String
+    private lateinit var timeFormat: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,28 +41,24 @@ class TimerFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val timerDefaultTime = getTimerDefaultTimeFromPreferences()
 
-        try {
-            val timerDefaultTime = sharedPreferences.getInt("timer_minutes", 25)
+        timerFinishText = getString(R.string.timer_finish_text)
+        timeFormat = getString(R.string.time_format)
 
-            timer = PototoTimer(timerDefaultTime * 60 * 1000,
-                ::timerFinish,
-                ::timerTick)
+        timer = PototoTimer(timerDefaultTime * 60 * 1000,
+            ::timerFinish,
+            ::timerTick)
 
-            timerTextView = binding.timerTextview
-            timerTextView.text = getString(R.string.time_placeholder, timerDefaultTime, 0)
+        timerTextView = binding.timerTextview
+        timerTextView.text = timeFormat.format(timerDefaultTime, 0)
 
-            potatoesImageView = binding.potatoesImageview
-            potatoesImageView.setOnClickListener(::timerStart)
+        potatoesImageView = binding.potatoesImageview
+        potatoesImageView.setOnClickListener(::timerStart)
 
-            cancelButton = binding.cancelButton
-            cancelButton.setOnClickListener(::timerCancel)
-        } catch (e: Exception) {
-            Log.i("hhh", "$e")
-        }
-
-
+        cancelButton = binding.cancelButton
+        cancelButton.setOnClickListener(::timerCancel)
 
         return binding.root
     }
@@ -78,27 +79,50 @@ class TimerFragment : Fragment() {
     }
 
     private fun timerStart(v: View) {
-        timer.start()
-        cancelButton.visibility = View.VISIBLE
+        if (!timer.counting) {
+            timer.start()
+            cancelButton.visibility = View.VISIBLE
+        }
     }
 
     private fun timerTick(p0: Long) {
-        timerTextView.text = getTimerTextViewText(p0.toInt())
+        if (isAdded && isVisible && userVisibleHint)
+            timerTextView.text = getTimerTextViewText(p0.toInt())
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!timer.counting)
+            timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
+
+        userVisibleHint = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        userVisibleHint = false
     }
 
     private fun timerFinish() {
-        timerTextView.text = getString(R.string.timer_finish_text)
+        timerTextView.text = timerFinishText
         cancelButton.visibility = View.INVISIBLE
+
+        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
     }
 
     private fun timerCancel(v: View) {
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
 
+        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
         timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
 
-    private fun getTimerTextViewText(millis: Int) = getString(R.string.time_placeholder, millis / 60000,
+    private fun getTimerTextViewText(millis: Int) = timeFormat.format(millis / 60000,
         (millis % 60000) / 1000)
 
+    private fun getTimerDefaultTimeFromPreferences() = sharedPreferences.getInt("timer_minutes",
+        getString(R.string.default_time_remain).toInt())
 }
