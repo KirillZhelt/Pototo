@@ -3,6 +3,7 @@ package dev.kirillzhelt.pototo
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
@@ -22,7 +23,6 @@ import kotlin.properties.Delegates
  *
  */
 class TimerFragment : Fragment() {
-    // TODO: pick defaultTimerTime from settings for new timer
 
     private lateinit var timerTextView: TextView
     private lateinit var potatoesImageView: ImageView
@@ -35,8 +35,6 @@ class TimerFragment : Fragment() {
     private lateinit var timerFinishText: String
     private lateinit var timeFormat: String
 
-    private var timerDefaultTime by Delegates.notNull<Int>()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding: FragmentTimerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
@@ -44,7 +42,7 @@ class TimerFragment : Fragment() {
         setHasOptionsMenu(true)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        timerDefaultTime = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
+        val timerDefaultTime = getTimerDefaultTimeFromPreferences()
 
         timerFinishText = getString(R.string.timer_finish_text)
         timeFormat = getString(R.string.time_format)
@@ -81,8 +79,10 @@ class TimerFragment : Fragment() {
     }
 
     private fun timerStart(v: View) {
-        timer.start()
-        cancelButton.visibility = View.VISIBLE
+        if (!timer.counting) {
+            timer.start()
+            cancelButton.visibility = View.VISIBLE
+        }
     }
 
     private fun timerTick(p0: Long) {
@@ -93,7 +93,9 @@ class TimerFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        timer.millisInFuture = sharedPreferences.getInt("timer_minutes", getString(R.string.default_time_remain).toInt())
+        if (!timer.counting)
+            timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
+
         userVisibleHint = true
     }
 
@@ -106,15 +108,21 @@ class TimerFragment : Fragment() {
     private fun timerFinish() {
         timerTextView.text = timerFinishText
         cancelButton.visibility = View.INVISIBLE
+
+        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
     }
 
     private fun timerCancel(v: View) {
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
 
+        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
         timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
 
     private fun getTimerTextViewText(millis: Int) = timeFormat.format(millis / 60000,
         (millis % 60000) / 1000)
+
+    private fun getTimerDefaultTimeFromPreferences() = sharedPreferences.getInt("timer_minutes",
+        getString(R.string.default_time_remain).toInt())
 }
