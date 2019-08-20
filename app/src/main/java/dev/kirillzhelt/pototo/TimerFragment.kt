@@ -47,12 +47,12 @@ class TimerFragment : Fragment() {
         timerFinishText = getString(R.string.timer_finish_text)
         timeFormat = getString(R.string.time_format)
 
-        timer = PototoTimer(timerDefaultTime * 60 * 1000,
+        timer = PototoTimer(timerDefaultTime,
             ::timerFinish,
             ::timerTick)
 
         timerTextView = binding.timerTextview
-        timerTextView.text = timeFormat.format(timerDefaultTime, 0)
+        timerTextView.text = getTimerTextViewText(timerDefaultTime)
 
         potatoesImageView = binding.potatoesImageview
         potatoesImageView.setOnClickListener(::timerStart)
@@ -94,7 +94,7 @@ class TimerFragment : Fragment() {
         super.onStart()
 
         if (!timer.counting)
-            timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
+            timer.millisInFuture = getTimerDefaultTimeFromPreferences()
 
         userVisibleHint = true
     }
@@ -107,22 +107,21 @@ class TimerFragment : Fragment() {
 
     private fun timerFinish() {
         timerTextView.text = timerFinishText
-        cancelButton.visibility = View.INVISIBLE
 
-        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
+        timer.millisInFuture = getTimerDefaultTimeFromPreferences()
     }
 
     private fun timerCancel(v: View) {
         timer.cancel()
         cancelButton.visibility = View.INVISIBLE
 
-        timer.millisInFuture = 60 * 1000 * getTimerDefaultTimeFromPreferences()
+        timer.millisInFuture = getTimerDefaultTimeFromPreferences()
         timerTextView.text = getTimerTextViewText(timer.millisInFuture)
     }
 
     private fun getTimerTextViewText(millis: Int) = timeFormat.format(millis / 60000,
         (millis % 60000) / 1000)
 
-    private fun getTimerDefaultTimeFromPreferences() = sharedPreferences.getInt("timer_minutes",
+    private fun getTimerDefaultTimeFromPreferences() = 60 * 1000 * sharedPreferences.getInt("timer_minutes",
         getString(R.string.default_time_remain).toInt())
 }
